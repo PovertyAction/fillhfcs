@@ -11,6 +11,8 @@ qui {
 if !mi("`outlier'") {
 	noi dis "Filling in outliers sheet..."
 	import excel using "`survey'", clear first
+	replace name = strlower(name)
+	drop if appearance == "label"
 	keep if type == "integer" | type == "decimal" | regexm(type, "repeat")
 	if `=_N' > 0 {
 		repgroup 
@@ -37,6 +39,9 @@ if !mi("`enumdb'") {
 		levelsof list_name, local(choices)
 
 		import excel using "`survey'", clear first
+		replace name = strlower(name)
+		drop if appearance == "label"
+
 		split type, p(" ")
 		drop type1
 		gen dkrf = .
@@ -76,9 +81,10 @@ if !mi("`enumdb'") {
 if !mi("`research'") {
 	noi dis "Filling in research oneway sheet..."
 	import excel using "`survey'", clear first
-
+	replace name = strlower(name)
 	repgroup
-
+	
+	drop if appearance == "label"
 	keep if type == "integer" | type == "decimal" | regexm(type, "select_one") 
 	if `=_N' > 0 {
 	keep type name x
@@ -96,7 +102,7 @@ if !mi("`research'") {
 if !mi("`specify'") {
 	noi dis "Filling in specify others sheet..."
 	import excel using "`survey'", clear first
-
+	replace name = strlower(name)
 	keep type name label relevance
 
 	gen child1 = ""
